@@ -1,0 +1,166 @@
+import random
+import time
+
+#Dice Roller:
+def roll_d_6(number):   
+    d_6 = 0
+    for i in range(number):
+      d_6 = d_6 + random.randint(1,6)
+    return d_6   
+
+def roll_d_20(number):
+   d_20 = 0
+   for i in range(number):
+      d_20 = d_20 + random.randint(1,20)
+   return d_20
+
+
+#Roll Damage claw:    
+def roll_for_damage():
+    roll_for_damage = roll_d_6(1) + 1
+    print("That attack delt " + str(roll_for_damage) + " damage.")
+    time.sleep(1)
+    return roll_for_damage
+
+#Roll Damage Bite:    
+def roll_for_damage_bite():
+    roll_for_damage = roll_d_6(1) + 3
+    print("That attack delt " + str(roll_for_damage) + " damage.")
+    time.sleep(1)
+    return roll_for_damage
+
+#Error Catcher:
+def error_catcher(fight_start):
+    while fight_start != "1" and fight_start != "2":
+        print("Invalid entry!")
+        fight_start = input()
+        if fight_start == 1:
+            break
+        else:
+            error_catcher(fight_start)  
+    while int(fight_start) != 1 and int(fight_start) != 2:
+        print("Invalid entry!")
+        fight_start = input()
+        if fight_start == 1 or 2:
+            break
+        else:
+            error_catcher(fight_start)
+    return int(fight_start)  
+      
+
+#Classes:
+class Fighter:
+    def __init__(self, name, AC, HP):
+        self.name = name
+        self.AC = AC
+        self.HP = HP
+
+#Variable Init:
+times_used = 0    
+ 
+#New Fighter:
+bahbee = Fighter("Bahbee", 10, 22)
+futah = Fighter("Futah", 10, 22)
+
+#Fight Starter:
+print("Are you ready for a fight? Input 1 or 2. (1/2)")
+print("1. Yes.")
+print("2. No.")
+fight_start = input()
+
+#Error Catcher: (Sorta works.)
+error_catcher(fight_start)
+ 
+
+#Not willing to start...
+while int(fight_start) == 2:
+    print("Okay...Guess I'll just wait...")
+    print("Are you ready now?")
+    fight_start = input("1. Yes. 2. No\n")
+
+#Fight:
+if int(fight_start) == 1:
+    print("Okay! It's Bahbee vs. Futah.")
+    print("Bahbee will strike first.")
+
+    #Main Combat Block:
+    while bahbee.HP or futah.HP >= 1:
+        bahbee_roll_to_hit = roll_d_20(1) + 4
+
+        attack_input = input("What attack should he do? (1. Claw Attack) (2. Bite)\n")
+         
+        #Bite Cooldown:
+        while int(attack_input) == 2 and times_used % 2 == 1:
+            attack_input = input("This attack is on cool-down. Choose another attack.\n")
+            if attack_input == 1:
+                times_used += 1
+                break
+        
+        #Claw Attack:
+        if int(attack_input) == 1:
+            if bahbee_roll_to_hit >= futah.AC and bahbee_roll_to_hit != 24:
+                print("That's a " + str(bahbee_roll_to_hit) + " to hit!")
+                time.sleep(1)
+                futah.HP = futah.HP - roll_for_damage()
+                print("Futah's HP is: " + str(futah.HP))
+                time.sleep(1)
+                
+            elif bahbee_roll_to_hit == 24:
+                print("That's a crit!")
+                time.sleep(1)
+                futah.HP = futah.HP - (roll_for_damage() + roll_for_damage())
+                print("Futah's HP is: " + str(futah.HP))
+                time.sleep(1)           
+            else:
+                print("The attack misses!")
+                time.sleep(1)
+                
+        #Bite Attack:       
+        if int(attack_input) == 2:
+            times_used += 1
+            if  bahbee_roll_to_hit >= futah.AC and bahbee_roll_to_hit != 24:
+                print("That's a " + str(bahbee_roll_to_hit) + " to hit!")
+                futah.HP = futah.HP - roll_for_damage_bite()
+                print("Futah's HP is: " + str(futah.HP))
+                time.sleep(1)                
+            elif bahbee_roll_to_hit == 24:
+                print("That a crit!")
+                time.sleep(1)
+                futah.HP = futah.HP - (roll_for_damage_bite() + roll_for_damage_bite())
+                print("Futah's HP is: " + str(futah.HP))
+                time.sleep(1)            
+            else:
+                print("The attack misses!")
+                time.sleep(1) 
+
+               
+        if futah.HP <= 0:
+                    break
+        futah_roll_to_hit = roll_d_20(1) + 4
+
+        print("Now it's Futah's turn. They make a kick attack.") #More Actions via RNG.
+        if futah_roll_to_hit >= bahbee.AC and futah_roll_to_hit != 24:
+            print("That's a " + str(futah_roll_to_hit) + " to hit!")
+            bahbee.HP = bahbee.HP - roll_for_damage()
+            print("Bahbee's HP is: " + str(bahbee.HP))
+            time.sleep(1)        
+        elif futah_roll_to_hit == 24:
+            print("That's a crit!")
+            bahbee.HP = bahbee.HP - (roll_for_damage() + roll_for_damage())
+            print("Bahbee's HP is: " + str(bahbee.HP))
+            time.sleep(1)        
+        else:
+            print("The attack misses!")
+            time.sleep(1)
+
+        #Cooldown Reset:
+        if times_used % 2 == 1 and int(attack_input) == 1:
+            times_used += 1
+            
+        if bahbee.HP <= 0:
+                break
+
+if bahbee.HP <= 0:
+    print("Bahbee has lost the battle.")
+elif futah.HP <= 0:
+    print("Futah has lost the battle.")
