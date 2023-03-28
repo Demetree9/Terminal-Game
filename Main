@@ -1,0 +1,464 @@
+import random
+import time
+import string
+
+
+
+#Dice Roller:
+def roll_d_4(number):   
+    d_4 = 0
+    for i in range(number):
+      d_4 = d_4 + random.randint(1,4)
+    return d_4 
+
+def roll_d_6(number):   
+    d_6 = 0
+    for i in range(number):
+      d_6 = d_6 + random.randint(1,6)
+    return d_6    
+
+def roll_d_8(number):
+   d_8 = 0
+   for i in range(number):
+    d_8 = d_8 + random.randint(1,8)
+   return d_8
+
+def roll_d_10(number):
+   d_10 = 0
+   for i in range(number):
+      d_10 = d_10 + random.randint(1,10)
+   return d_10
+
+def roll_d_12(number):
+   d_12 = 0
+   for i in range(number):
+      d_12 = d_12 + random.randint(1,12)
+   return d_12
+   
+def roll_d_20(number):
+   d_20 = 0
+   for i in range(number):
+      d_20 = d_20 + random.randint(1,20)
+   return d_20
+
+#Roll Damage Bandit   
+def roll_for_damage_bandit():
+    roll_for_damage = roll_d_6(1) + 1
+    print("That attack delt " + str(roll_for_damage) + " damage.")
+    time.sleep(1)
+    return roll_for_damage
+
+#Roll Damage Player:    
+def roll_for_damage_player():
+    roll_for_damage = roll_d_6(1) + 3
+    print("That attack delt " + str(roll_for_damage) + " damage.")
+    time.sleep(1)
+    return roll_for_damage
+
+class Player:
+   def __init__(self, ac, hp, valubles, gold):
+      self.ac = ac
+      self.hp = hp
+      self.valubles = valubles
+      self.gold = gold
+
+   
+
+#Player Constructor:
+adam = Player(14, 28, ["Magic Wand", "Love Potion", "Studded Chaps"], 0)
+
+#Enemy Constructor:
+bandit_bill = Player(12, 11, "Short Sword", 5)
+bandit_paul = Player(12, 11, "Short Sword", 5)
+
+
+#Menu:
+print("Hello there! Are you ready for an adventure!? (Y/N) ")
+user_input_1 = input()
+
+# Start of Story: Not letters, 
+while user_input_1.upper() != "Y" and user_input_1.upper() != "N":
+      print('Invalid entry! Type "Y" or "N" to continue')
+      user_input_1 = input()
+     
+
+while user_input_1.upper() == "N":
+      print("Okay...I guess I'll just wait until you are...")
+      print("Hello there! Are you ready for an adventure now!? (Y/N) ")
+      user_input_1 = input()
+      if user_input_1.upper() == "Y": 
+         break
+
+if user_input_1.upper() == "Y":
+    print("Good! Then we're off on an adventure!")
+    time.sleep(1)
+    print("You enbark from the city of Varrock, heading south to Lumbridge.")
+    time.sleep(1)
+    print("You have your horse all loaded up with valubles to trade to the townsfolk when you arive.")
+    time.sleep(1)      
+
+#First Event Determined by a D4:
+random_event_1 = roll_d_4(1)
+
+
+#If a 1 is rolled:
+if random_event_1 == 1:
+   print("As you are traveling the long road to the south, two individuals stop you.")
+   time.sleep(1)
+   print('"Hey you!" They scream. "Give us all your stuff or else!"')
+   time.sleep(1)
+   print("What do you do? (1,2,3)")
+   time.sleep(1)
+   print("1. Give them all your stuff")
+   print("2. Fight them!")
+   print("3. Run past them!")
+
+   user_input_2 = input()
+
+   # Invalid input:
+   while user_input_2 != "1" and user_input_2 != "2" and user_input_2 != "3":
+         print("Invalid response. Try inputting 1, 2 or 3.")
+         user_input_2 = input()
+         if int(user_input_2) == 1 or 2 or 3:
+            break
+         
+#If option 1, player hands their stuff over:
+   if int(user_input_2) == int(1):
+      print("You hand over all your stuff, and the individuals move on their way.")
+      adam.valubles = []
+
+
+    #If option 2, they fight or die.
+   elif int(user_input_2) == int(2):
+      print("You decide to face these bandit scum!")
+      time.sleep(1)
+   while adam.hp >= 1:
+    if bandit_bill.hp <= 0 and bandit_paul.hp <= 0:
+       break
+
+    #Player Attacks:
+    player_to_hit = roll_d_20(1) + 4
+    bandit_attack = input("Which one will you attack? 1. Scum 1! 2. Scum 2! (1,2)\n")
+
+   #Bandit 1:
+    if int(bandit_attack) == 1 and bandit_bill.hp >= 1:
+        if player_to_hit >= bandit_bill.ac and player_to_hit != 24:
+           print("That's a " + str(player_to_hit) + " to hit!")
+           bandit_bill.hp = bandit_bill.hp - roll_for_damage_player()
+           print("Scum 1 has " + str(bandit_bill.hp) + " health remaining.")
+           time.sleep(1)
+        elif player_to_hit == 24 and bandit_bill.hp >= 1:
+           print("That's a crit!")
+           time.sleep(1)
+           bandit_bill.hp = bandit_bill.hp - (roll_for_damage_player() + roll_for_damage_player())
+           print("Scum 1 has " + str(bandit_bill.hp) + " health remaining.")
+           time.sleep(1)
+        elif player_to_hit < bandit_bill.ac and bandit_bill.hp >= 1:
+           print("That attack misses...")
+           time.sleep(1)
+    else:
+        if bandit_bill.hp <= 0 and int(bandit_attack) == 1:
+         print("You've already slain him though...")
+         time.sleep(.5)
+         while int(bandit_attack) != 2:
+            bandit_attack = input("Try attacking the other guy...")
+            if int(bandit_attack) == 2:
+               break
+   #Bandit 2:         
+    if int(bandit_attack) == 2 and bandit_paul.hp >= 1:
+        if player_to_hit >= bandit_paul.ac and player_to_hit != 24:
+           print("That's a " + str(player_to_hit) + " to hit!")
+           time.sleep(1)
+           bandit_paul.hp = bandit_paul.hp - roll_for_damage_player()
+           print("Scum 2 has " + str(bandit_paul.hp) + " health remaining.")
+           time.sleep(1)
+        elif player_to_hit == 24:
+          print("That's a crit!")
+          time.sleep(1)
+          bandit_paul.hp = bandit_paul.hp - (roll_for_damage_player() + roll_for_damage_player())
+          time.sleep(1)
+          print("Scrum 2 has " + str(bandit_paul.hp) + " health remaining.")
+          time.sleep(1)
+        elif player_to_hit < bandit_paul.ac:
+           print("That attack misses...")
+           time.sleep(1)
+        else:
+         if bandit_paul.hp <= 0 and int(bandit_attack) == 2:
+            print("You've already slain him though...")
+            time.sleep(.5)
+            continue
+    
+    #Bandit's Blocks:
+
+    #Dead Test:
+    
+    
+    #Bandit Paul:
+    if bandit_bill.hp >= 1 or bandit_paul.hp >= 1:
+      print("Now it's the bandits' turn.")
+    if bandit_paul.hp >= 1:
+          bandit_paul_attack = roll_d_20(1) + 2
+          print("Bandit Paul makes a short sword attack.")
+          time.sleep(1)
+          if bandit_paul_attack >= adam.ac and bandit_paul_attack != 22:
+              print("That a " + str(bandit_paul_attack) + " to hit!")
+              adam.hp = adam.hp - roll_for_damage_bandit()
+              print("You have " + str(adam.hp) + " health remaining.")
+              time.sleep(1)
+          elif bandit_paul_attack == 22:
+             print("That's a crit!")
+             adam.hp = adam.hp - (roll_for_damage_bandit() + roll_for_damage_bandit())
+             print("You have " + str(adam.hp) + " health remaining.")
+             time.sleep(1)
+          else:
+             print("Their attack misses...")
+             time.sleep(1)
+    #Bandit Bill:
+    if bandit_bill.hp >= 1:
+          bandit_bill_attack = roll_d_20(1) + 2
+          print("Bandit Bill makes a short sword attack.")
+          if bandit_bill_attack >= adam.ac and bandit_bill_attack != 22:
+             print("That's a " + str(bandit_bill_attack)+ " to hit!")
+             time.sleep(1)
+             adam.hp = adam.hp - roll_for_damage_bandit()
+             print("You have " + str(adam.hp) + " health remaining.")
+             time.sleep(1)
+          elif bandit_bill_attack == 22:
+             print("That's a crit!")
+             time.sleep(1)
+             adam.hp = adam.hp - (roll_for_damage_bandit() + roll_for_damage_bandit())
+             print("You have " + str(adam.hp) + " health remaining.")
+             time.sleep(1)
+          else:
+             print("That attack misses...")
+             time.sleep(1)
+
+#Looting bodies block
+   if adam.hp <= 0:
+      print("You have been defeated.")
+   else:
+      print("The bodies of the two bandits lay before you.")
+      time.sleep(1)
+      loot_input = input("Would you like to search the bodies? (1. Yes 2. No)\n")
+      while int(loot_input) != 1 and int(loot_input) != 2:
+         print("Invalid input. Try again.")
+         loot_input = input()
+      if int(loot_input) == 2:
+         print("Okay, suit yourself.")
+      elif int(loot_input) == 1:
+         print("You start to investigate the first bandit's body.")
+         time.sleep(1)
+         loot_search = roll_d_20(1)
+         if loot_search >= 15:
+            print("You loot his short sword and five gold")
+            adam.valubles.append(bandit_paul.valubles)
+            adam.gold += 5
+            time.sleep(1)
+            print("You now have " + str(adam.valubles))
+            time.sleep(1)
+            print("You now have " + str(adam.gold) + " gold.")
+         elif loot_search >= 10 and loot_search < 15:
+            print("You loot his short sword.")
+            adam.valubles.append(bandit_paul.valubles)
+            time.sleep(1)
+            print("You now have " + str(adam.valubles))
+         elif loot_search < 10:
+            print("You don't find anything on the body.")
+            print("You start to search the second bandit's body.")
+            time.sleep(1)
+            loot_search = roll_d_20(1)
+         if loot_search >= 15:
+            print("You loot his short sword and five gold")
+            adam.valubles.append(bandit_paul.valubles)
+            adam.gold += 5
+            time.sleep(1)
+            print("You now have " + str(adam.valubles))
+            time.sleep(1)
+            print("You now have " + str(adam.gold) + " gold.")
+         elif loot_search >= 10 and loot_search < 15:
+            print("You loot his short sword.")
+            adam.valubles.append(bandit_paul.valubles)
+            time.sleep(1)
+            print("You now have " + str(adam.valubles))
+         elif loot_search < 10:
+            print("You don't find anything on the body.")
+
+
+
+    #Option 3 the player tries to run.
+   if int(user_input_2) == int(3):
+      print("You snap your reins and take off.")
+      print("You will need to roll a 9 or above to get away. Are you ready? (Y/N)")
+      user_input_4 = input()
+
+
+      while user_input_4.upper() != "Y":
+         print("Alright...type Y when you're ready.")
+         user_input_4 = input()
+      if user_input_4.upper() == "Y":
+            d_20_roll = roll_d_20(1)
+            print(d_20_roll)
+            if d_20_roll >= 9:
+               print("Your horse is too fast and you get away.")
+            else:
+               print("They manage to catch you as you run and defeat you.")
+               adam.hp = 0
+   
+#Second Event if 2 is rolled on the D4:
+if random_event_1 == 2:
+   print("As you are traveling, you see an individual in a rainbow suit approach you.")
+   print('"Hey you!" He exclaims, "Do you want to hear some jokes? (Y/N)')
+   user_input_1 = input()
+
+# Error Catcher:
+   while user_input_1.upper() == "Y" and user_input_1.upper() == "N":
+      print('Invalid entry. Try "Y" or "N"')
+      user_input_1 = input()
+      if user_input_1 == "Y" or "N":
+         break
+
+#Bard interaction:
+   if user_input_1.upper() == "N":
+      print('"No thanks," you say as you continue on your way.')
+   elif user_input_1.upper() == "Y":
+      print("Sure you say. Let's hear them.")
+      print('"Okay," says the individual, "What is the difference between a hippo and a zippo?"')
+      print('Type "?" when you are ready')
+
+#First Joke:
+   #Error Catcher:
+      user_input_2 = input()
+      while user_input_2 != "?":
+         print('Did you type "?"')
+         user_input_2 = input()
+         if user_input_2 == "?":
+            break
+   #Punchline:      
+      if user_input_2 == "?":
+         print("Well one's heavy and one's a little lighter.")
+
+#Second Joke Option:
+         print("Do you want to hear another? (Y/N)")
+         user_input_3 = input()
+
+   #Error Catcher:       
+         while user_input_3.upper() != "Y" and user_input_3.upper() != "N":
+            print('Invalid entry. Try "Y" or "N"')
+            user_input_3 = input()
+            if user_input_3.upper() == "Y" or "N":
+               break
+   #Joke 2:
+         if user_input_3.upper() == "Y":
+            print("Okay. What do you call a person with a nose, but no body?")
+            print('Type "?" when you are ready')
+            user_input_4 = input()
+
+   #Error Catcher:         
+            while user_input_4 != "?":
+               print('Did you type "?"')
+               user_input_4 = input()
+               if user_input_4 == "?":
+                  break
+
+   #Punchline:            
+            if user_input_4 == "?":
+               print("Nobody knows!")
+               print("Well that's all I have time for. Have a nice day, and thanks for listening!")
+
+#Third event if a 3 is rolled:
+if random_event_1 == 3:
+   print("As you are traveling along the road, a storm begins to brew. What should you do?")
+   print("1. Take shelter immediately!")
+   print("2. Keep going, you'll be fine.")
+   print("Input 1 or 2.")
+   user_input_1 = input()
+
+   #Error Catcher:
+   while user_input_1 != "1" and user_input_1 != "2":
+      print('Invalid input. Try "1" or "2"')
+      user_input_1 = input()
+      if int(user_input_1) == 1 or 2:
+         break
+
+   #Choices:
+   if int(user_input_1) == 1:
+      print("You take shelter from the storm and it eventually passes. A good choice.")
+
+   elif int(user_input_1) == 2:
+      print("You decide to keep going, but storm continues.")
+      print("You'll have to be lucky to get out of this one unharmed.")
+      print("If you can roll a 15 or higher, you can weather the storm and make it to your destination. Are you ready? (Y/N)")
+      user_input_2 = input()
+
+      #Error Catcher:
+      while user_input_2.upper() != "Y" and "N":
+            print('Invalid entry. Try "Y" or "N"')
+            user_input_2 = input()
+            if user_input_2.upper() == "Y" or "N":
+               break
+      #If not ready:
+      if user_input_2.upper() == "N":
+         print("Okay...hopefully something bad doesn't happen as you wait...")
+         print("Are you ready now? (Y/N)")
+         user_input_2 = input()
+         if user_input_2.upper() == "N":
+            print("As you hesitate, a bolt of lighting strikes you down...what bad luck.")
+         elif user_input_2 == "Y":
+            d_20_roll = roll_d_20(1)
+            if d_20_roll >= 15:
+               print("You make it to Lumbridge as the sun finally comes out.")
+            else:
+               print("The strong winds, rain and thunder are too much for you and your horse to bear.")
+               print("You are hopelessly lost.") #Send back to beginning. 
+
+      #If ready:
+      if user_input_2.upper() == "Y":
+         d_20_roll = roll_d_20(1)
+         if d_20_roll >= 15:
+            print("You make it to Lumbridge as the sun finally comes out.")
+         else:
+            print("The strong winds, rain and thunder are too much for you and your horse to bear.")
+            print("You are hopelessly lost.") #Send back to beginning. 
+            adam.hp = 0
+
+#Last event if 4 is rolled:
+if random_event_1 == 4:
+   print("You have a very pleasant journey to Lumbridge and get there just as the shops open.")
+   time.sleep(1)
+
+if adam.hp == 0:
+   print("You have perished before making it to Lumbridge.")
+elif adam.hp >= 1:
+   lum_user_input = input("You arive in Lumbridge. What would you like to do? 1. Sell your wares. 2. Do nothing.\n")
+   if int(lum_user_input) == 2:
+      adam.valubles = []
+      lum_user_input = 1
+   while int(lum_user_input) == 1:
+    if adam.valubles == []:
+      break
+    print("Here's what you have:")
+    print(adam.valubles)
+    time.sleep(.5)
+    sell_wares = input("What would you like to sell?\n")
+    if adam.valubles == []:
+       print("you have nothing more to sell.")
+       break
+    for items in adam.valubles:
+        if string.capwords(sell_wares) == items:         
+            current_inventory = adam.valubles
+            current_inventory.remove(string.capwords(sell_wares))
+            print("Well, look at this " + str(sell_wares) + "!")
+            time.sleep(.5)
+            item_value = roll_d_20(2)
+            print("I'll give you " + str(item_value) + " for it.")
+            time.sleep(.5)
+            adam.gold += item_value
+            print("You now have " + str(adam.gold) + " gold coins.")
+            time.sleep(1)
+            lum_user_input = input("Would you like to continue selling your wares? 1. Yes 2. No\n")
+            if int(lum_user_input) ==2:
+               break
+
+   
+  
+
